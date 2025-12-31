@@ -1,0 +1,10 @@
+[package]
+name = "tank"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+avian3d = "0.4.1"
+bevy = "0.17.3"
+bevy_trenchbroom = "0.11.0"
+bevy_trenchbroom_avian = "0.11.0"
