@@ -1,4 +1,4 @@
-use avian3d::PhysicsPlugins;
+use avian3d::{PhysicsPlugins, prelude::PhysicsDebugPlugin};
 use bevy::{DefaultPlugins, app::App};
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 use bevy_trenchbroom::{TrenchBroomPlugins, config::TrenchBroomConfig, prelude::{SceneHooks, TrenchBroomPhysicsPlugin}};
@@ -15,7 +15,8 @@ fn main() {
         WorldInspectorPlugin::default(),
         TrenchBroomPhysicsPlugin::new(AvianPhysicsBackend),
         TrenchBroomPlugins(TrenchBroomConfig::new("tank").default_solid_scene_hooks(|| SceneHooks::new().convex_collider())),
-        PhysicsPlugins::default()
+        PhysicsPlugins::default(),
+        PhysicsDebugPlugin::default()
     ));
     //game plugins
     app.add_plugins(game::GamePlugin);

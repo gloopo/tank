@@ -1,0 +1,6 @@
+ktx create --cubemap --format R8G8B8_SRGB --zstd 18 --assign-tf srgb --assign-primaries bt709 --generate-mipmap px.png nx.png py.png ny.png pz.png nz.png output.ktx2
+
+or
+
+mogrify -resize 256x256 -format png *.jpg
+convert px.png nx.png py.png ny.png pz.png nz.png -gravity center -append cubemap.png

@@ -1,4 +1,4 @@
-use avian3d::prelude::{AngularDamping, Collider, RigidBody};
+use avian3d::prelude::{AngularDamping, Collider, LockedAxes, RigidBody};
 use bevy::prelude::*;
 
 pub(crate) struct PlayerPlugin;
@@ -20,7 +20,8 @@ fn spawn_player(mut commands: Commands, server: Res<AssetServer>) {
         Player,
         SceneRoot(server.load("models/tank.glb#Scene0")),
         RigidBody::Dynamic,
-        Collider::cylinder(0.5, 1.0),
-        AngularDamping(2.0)
+        Collider::cylinder(0.5, 0.5),
+        AngularDamping(2.0),
+        //LockedAxes::new().lock_rotation_x().lock_rotation_z()
     ));
 }

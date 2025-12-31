@@ -14,10 +14,10 @@ impl Plugin for EnvironmentPlugin {
 fn setup(mut commands: Commands, server: Res<AssetServer>) {
     //test camera
     commands.spawn((
-        Transform::from_xyz(20.0, 20.0, 20.0).looking_at(Vec3::ZERO, Vec3::Y),
+        Transform::from_xyz(0.0, 1.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
         Camera3d::default(),
         Skybox {
-            image: server.load("skyboxes/ryfjallet_cubemap_bc7.ktx2"), //ktx file MUST be bc7
+            image: server.load("skyboxes/cloudy.ktx2"), //ktx file MUST be bc7
             brightness: 1000.0,
             ..Default::default()
         }
