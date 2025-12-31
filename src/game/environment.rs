@@ -22,4 +22,6 @@ fn setup(mut commands: Commands, server: Res<AssetServer>) {
             ..Default::default()
         }
     ));
+    //map
+    commands.spawn(SceneRoot(server.load("maps/world.map#Scene")));
 }

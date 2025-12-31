@@ -5,7 +5,10 @@ pub mod player;
 pub(crate) struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins(environment::EnvironmentPlugin);
+        app.add_plugins((
+            environment::EnvironmentPlugin,
+            player::PlayerPlugin
+        ));
     }
 }
 
