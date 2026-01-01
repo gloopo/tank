@@ -7,7 +7,7 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((
             environment::EnvironmentPlugin,
-            player::PlayerPlugin
+            player::PlayerPlugin,
         ));
     }
 }
