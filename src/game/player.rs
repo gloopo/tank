@@ -1,4 +1,4 @@
-use avian3d::prelude::{AngularDamping, Collider, Forces, LinearDamping, LinearVelocity, LockedAxes, RigidBody, RigidBodyForces, ShapeCaster, ShapeHits};
+use avian3d::prelude::{AngularDamping, Collider, Forces, LinearDamping, LockedAxes, RigidBody, RigidBodyForces, ShapeCaster, ShapeHits};
 use bevy::{core_pipeline::Skybox, prelude::*};
 
 use crate::game::environment::LoadedMap;
@@ -10,7 +10,7 @@ impl Plugin for PlayerPlugin {
         app.add_systems(FixedUpdate, (
             movement,
             set_is_grounded,
-            set_damping
+            set_damping.after(set_is_grounded)
         ));
     }
 }
@@ -30,13 +30,13 @@ impl Default for Player {
 fn spawn_player(mut commands: Commands, server: Res<AssetServer>, map: Res<LoadedMap>) {
     commands.spawn((
         Name::new("player"),
-        Transform::from_xyz(0.0, 10.0, 0.0),
+        Transform::from_xyz(0.0, 5.0, 0.0),
         Player::default(),
         SceneRoot(server.load("models/tank.glb#Scene0")),
         RigidBody::Dynamic,
         Collider::cylinder(0.5, 0.5),
-        AngularDamping(2.0),
-        LinearDamping(3.0),
+        AngularDamping(0.0),
+        LinearDamping(0.0),
         LockedAxes::new()
             .lock_rotation_x()
             .lock_rotation_z(),
@@ -45,10 +45,12 @@ fn spawn_player(mut commands: Commands, server: Res<AssetServer>, map: Res<Loade
             Vec3::new(0.0, -0.3, 0.0),
             Quat::default(),
             Dir3::NEG_Y
-            ).with_ignore_self(true),
+            )
+            .with_ignore_self(true)
+            .with_max_distance(0.01),
         children![
             ((
-                Transform::from_xyz(0.0, 0.0, 0.1),
+                Transform::from_xyz(0.0, 0.0, 2.1),
                 Camera3d::default(),
                 Skybox {
                     image: map.skybox.clone(),
