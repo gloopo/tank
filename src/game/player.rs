@@ -1,4 +1,4 @@
-use avian3d::prelude::{AngularDamping, Collider, Forces, LinearDamping, LockedAxes, RigidBody, RigidBodyForces, ShapeCaster, ShapeHits};
+use avian3d::prelude::{AngularDamping, AngularVelocity, Collider, Forces, LinearDamping, LockedAxes, RigidBody, RigidBodyForces, ShapeCaster, ShapeHits};
 use bevy::{core_pipeline::Skybox, prelude::*};
 
 use crate::game::environment::LoadedMap;
@@ -9,6 +9,7 @@ impl Plugin for PlayerPlugin {
         app.add_systems(Startup, spawn_player);
         app.add_systems(FixedUpdate, (
             movement,
+            rotation,
             set_is_grounded,
             set_damping.after(set_is_grounded)
         ));
@@ -50,7 +51,7 @@ fn spawn_player(mut commands: Commands, server: Res<AssetServer>, map: Res<Loade
             .with_max_distance(0.01),
         children![
             ((
-                Transform::from_xyz(0.0, 0.0, 2.1),
+                Transform::from_xyz(0.0, 0.0, 0.1),
                 Camera3d::default(),
                 Skybox {
                     image: map.skybox.clone(),
@@ -76,7 +77,7 @@ fn set_damping(
     for (player, mut linear_damp, mut angular_damp) in player_query.iter_mut() {
         if player.is_grounded {
             linear_damp.0 = 5.0;
-            angular_damp.0 = 2.0;
+            angular_damp.0 = 1.0;
         } else {
             linear_damp.0 = 0.0;
             angular_damp.0 = 0.0;
@@ -90,22 +91,34 @@ fn movement(
     time: Res<Time>
 ) {
     for (mut forces, transform, player) in &mut player_query {
-        let mut input_vec = Vec3::default();
+        let mut dir = 0.0;
         if input.pressed(KeyCode::KeyW) {
-            input_vec.z += 1.0;
+            dir += 1.0;
         }
         if input.pressed(KeyCode::KeyS) {
-            input_vec.z -= 1.0;
-        }
-        if input.pressed(KeyCode::KeyD) {
-            input_vec.x -= 1.0;
-        }
-        if input.pressed(KeyCode::KeyA) {
-            input_vec.x += 1.0;
+            dir -= 1.0;
         }
         if player.is_grounded {
-            forces.apply_linear_impulse(transform.forward() * player.speed  * time.delta_secs() * input_vec.z);
-            forces.apply_local_torque(Vec3::Y * 10.0 * input_vec.x * time.delta_secs());
+            forces.apply_linear_impulse(transform.forward() * dir * player.speed  * time.delta_secs());
+        }
+    }
+}
+
+fn rotation(
+    mut player_query: Query<(&mut AngularVelocity, &Player)>,
+    input: Res<ButtonInput<KeyCode>>,
+    time: Res<Time>
+) {
+    for (mut ang, player) in &mut player_query {
+        let mut dir = 0.0;
+        if input.pressed(KeyCode::KeyD) {
+            dir -= 1.0;
+        }
+        if input.pressed(KeyCode::KeyA) {
+            dir += 1.0;
+        }
+        if player.is_grounded {
+            ang.0.y = dir * 50.0 * time.delta_secs();
         }
     }
 }
