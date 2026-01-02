@@ -51,7 +51,7 @@ fn spawn_player(mut commands: Commands, server: Res<AssetServer>, map: Res<Loade
             .with_max_distance(0.01),
         children![
             ((
-                Transform::from_xyz(0.0, 0.0, 0.1),
+                Transform::from_xyz(0.0, 0.0, -0.1),
                 Camera3d::default(),
                 Skybox {
                     image: map.skybox.clone(),
@@ -118,7 +118,7 @@ fn rotation(
             dir += 1.0;
         }
         if player.is_grounded {
-            ang.0.y = dir * 50.0 * time.delta_secs();
+            ang.0.y = dir * 60.0 * time.delta_secs();
         }
     }
 }
